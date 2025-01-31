@@ -1,2 +1,2 @@
 # RBLASSO
-This codes are related to the article titled: "Restricted‎ Bayesian ‎LASSO‎ Regression ‎with Inequality Constraints" written by Solmaz Seifollahi and Mohammad Arashi
+These codes are related to Solmaz Seifollahi and Mohammad Arashi's article "Restricted‎ Bayesian ‎LASSO‎ Regression ‎with Inequality Constraints."
