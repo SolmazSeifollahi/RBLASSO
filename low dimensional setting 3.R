@@ -1,5 +1,4 @@
-rm(list=ls())
-setwd("C:/Users/Almustaqbal/Desktop/Old setting/old setting 3")
+
 library(MASS)
 library(statmod)
 library(tmvmixnorm)
@@ -16,7 +15,7 @@ p<- 20        #the number of covariates p=100, 200
 rho<- 0       #the correlation value rho=0, 0.5
 
 #characters of MCMC
-nsample<- 1e4   # MCMC path lenght
+nsample<- 1e4   # MCMC path length
 burnin<- 1e3    # MCMC burn-in number
 thin<- 10        # MCMC thining number
 
@@ -26,7 +25,7 @@ nrep<- 50       # the number of replications
 tbeta<- c(rep(2, 4), rep(0, 2), rep(-3, 4), rep(0, 10))
 rsigma2<- 4
 
-# restrictions on parameters
+# Restrictions on parameters
 H<- matrix(0, nrow=4, ncol=p)
 H[1,1]<- 1
 H[2,3]<- 1
@@ -48,16 +47,11 @@ resigma2<- c(); unsigma2<- c()
 
 #------------storing outputs--------------
 MSEy<- matrix(nrow = nrep, ncol=2); colnames(MSEy)<- c("RE", "UN")
-RMSEy<- matrix(nrow = nrep, ncol=2); colnames(RMSEy)<- c("RE", "UN")
 MAEy<- matrix(nrow = nrep, ncol=2); colnames(MAEy)<- c("RE", "UN")
 MSEb<- matrix(nrow = nrep, ncol=2); colnames(MSEb)<- c("RE", "UN")
-RMSEb<- matrix(nrow = nrep, ncol=2); colnames(RMSEb)<- c("RE", "UN")
 MAEb<- matrix(nrow = nrep, ncol=2); colnames(MAEb)<- c("RE", "UN")
-Pref<- matrix(nrow = nrep, ncol=2); colnames(Pref)<- c("RE", "UN")
-NONz<- matrix(nrow = nrep, ncol=2)
 recerit<- matrix(nrow = nrep, ncol=3)
 uncerit<- matrix(nrow = nrep, ncol=3)
-View(recerit)
 
 for (m in 1:nrep) {
   set.seed(110+m)
@@ -218,47 +212,15 @@ for (m in 1:nrep) {
   NONz[m,1]<- sum(rebeta[m,] != 0)
   NONz[m,2]<- sum(unbeta[m,] != 0)
 }
-etime<- Sys.time()
-
-output2<- matrix(nrow=11, ncol=2)
-rownames(output2)<- c("MSEy", "RMSEy", "MAEy","MSEb", "RMSEb", "MAEb", "perf", "total_miss", "fdr", "fnr", "NONz")
+             
+output2<- matrix(nrow=7, ncol=2)
+rownames(output2)<- c("MSEy", "MAEy", "MSEb", "MAEb",  "total_miss", "fdr", "fnr")
 colnames(output2)<- c("REmedian", "UNmedian")
 output2[1,]<- colMeans(MSEy, na.rm = T)
-output2[2,]<- colMeans(RMSEy, na.rm = T)
-output2[3,]<- colMeans(MAEy, na.rm = T)
-output2[4,]<- colMeans(MSEb, na.rm = T)
-output2[5,]<- colMeans(RMSEb, na.rm = T)
-output2[6,]<- colMeans(MAEb, na.rm = T)
-output2[7,]<- colMeans(Pref, na.rm = T)
-output2[8:10,1]<- colMeans(recerit, na.rm = T)
-output2[8:10,2]<- colMeans(uncerit, na.rm = T)
-output2[11,]<- colMeans(NONz, na.rm = T)
-
-filename <- paste0("Old low_setting_3(rho=", rho,")", ".txt")
-sink(filename)
-round(output2, 4)
-
-print("System time")
-etime-stime
-sink()
-
-
-filename1 <- paste0("OLD (MSEy & RMSEy & MAEy)low_setting_3(rho=", rho,")", ".csv")
-write.csv(cbind(MSEy, RMSEy, MAEy), filename1, row.names = FALSE)
-
-filename2 <- paste0("OLD (MSEb & RMSEb  & MAEb)low_setting_3(rho=", rho,")", ".csv")
-write.csv(cbind(MSEb, RMSEb, MAEb), filename2, row.names = FALSE)
-
-filename3 <- paste0("OLD cerit low_setting_3(rho=", rho,")", ".csv")
-write.csv(cbind(recerit,uncerit), filename3, row.names = FALSE)
-
-filename4<- paste0("OLD RE low_setting_3(rho=", rho,")", ".csv")
-write.csv(rebeta, file = filename4, row.names = FALSE)
-
-filename5<- paste0("OLD Un low_setting_3(rho=", rho,")", ".csv")
-write.csv(unbeta, file = filename5, row.names = FALSE)
-
-filename6<- paste0("OLD NONz low_setting_3(rho=", rho,")", ".csv")
-write.csv(NONz, file = filename6, row.names = FALSE)
+output2[2,]<- colMeans(MAEy, na.rm = T)
+output2[3,]<- colMeans(MSEb, na.rm = T)
+output2[4,]<- colMeans(MAEb, na.rm = T)
+output2[5:7,1]<- colMeans(recerit, na.rm = T)
+output2[5:7,2]<- colMeans(uncerit, na.rm = T)
 
 
