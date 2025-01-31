@@ -1,4 +1,4 @@
-# these codes are related to the Low-dimanensional setting 1 in the manuscript.
+# these codes are related to the Low-dimensional setting 1 in the manuscript.
 
 rm(list=ls())
 library(MASS)
@@ -7,7 +7,7 @@ library(tmvmixnorm)
 library(glmnet)
 library(coda)
 source("criteria.R")
-stime<- Sys.time()
+
 
 n<- 150        # total number of observations
 ntr<- 50      # number of observations for training
@@ -17,7 +17,7 @@ p<- 10        #the number of covariates p=100, 200
 rho<- 0.9        #the correlation value rho=0, 0.5
 
 #characters of MCMC
-nsample<- 1e4   # MCMC path lenght
+nsample<- 1e4   # MCMC path length
 burnin<- 1e3    # MCMC burn-in number
 thin<- 10        # MCMC thining number
 
@@ -27,7 +27,7 @@ nrep<- 50       # the number of replications
 tbeta<- c(3, -2, 1, 0, 2, rep(0, 5))
 rsigma2<- 4
 
-# restrictions on parameters
+# Restrictions on parameters
 H<- matrix(0, nrow=3, ncol=p)
 H[1,1]<- 1
 H[2,2]<- 1
@@ -51,16 +51,11 @@ resigma2<- c(); unsigma2<- c()
 
 #------------storing outputs--------------
 MSEy<- matrix(nrow = nrep, ncol=2); colnames(MSEy)<- c("RE", "UN")
-RMSEy<- matrix(nrow = nrep, ncol=2); colnames(RMSEy)<- c("RE", "UN")
 MAEy<- matrix(nrow = nrep, ncol=2); colnames(MAEy)<- c("RE", "UN")
 MSEb<- matrix(nrow = nrep, ncol=2); colnames(MSEb)<- c("RE", "UN")
-RMSEb<- matrix(nrow = nrep, ncol=2); colnames(RMSEb)<- c("RE", "UN")
 MAEb<- matrix(nrow = nrep, ncol=2); colnames(MAEb)<- c("RE", "UN")
-Pref<- matrix(nrow = nrep, ncol=2); colnames(Pref)<- c("RE", "UN")
-NONz<- matrix(nrow = nrep, ncol=2)
 recerit<- matrix(nrow = nrep, ncol=3)
 uncerit<- matrix(nrow = nrep, ncol=3)
-View(recerit)
 
 # start replications
 for (m in 1:nrep) {
@@ -209,21 +204,17 @@ for (m in 1:nrep) {
   recerit[m,]<- criteria(rebeta[m,], tbeta)
   uncerit[m,]<- criteria(unbeta[m,], tbeta)
 }
-etime<- Sys.time()
 
-output2<- matrix(nrow=9, ncol=2)
-rownames(output2)<- c("MSEy", "RMSEy", "MAEy","MSEb", "RMSEb", "MAEb", "total_miss", "fdr", "fnr")
+output2<- matrix(nrow=7, ncol=2)
+rownames(output2)<- c("MSEy", "MAEy", "MSEb", "MAEb",  "total_miss", "fdr", "fnr")
 colnames(output2)<- c("REmedian", "UNmedian")
 output2[1,]<- colMeans(MSEy, na.rm = T)
-output2[2,]<- colMeans(RMSEy, na.rm = T)
-output2[3,]<- colMeans(MAEy, na.rm = T)
-output2[4,]<- colMeans(MSEb, na.rm = T)
-output2[5,]<- colMeans(RMSEb, na.rm = T)
-output2[6,]<- colMeans(MAEb, na.rm = T)
-output2[7:9,1]<- colMeans(recerit, na.rm = T)
-output2[7:9,2]<- colMeans(uncerit, na.rm = T)
+output2[2,]<- colMeans(MAEy, na.rm = T)
+output2[3,]<- colMeans(MSEb, na.rm = T)
+output2[4,]<- colMeans(MAEb, na.rm = T)
+output2[5:7,1]<- colMeans(recerit, na.rm = T)
+output2[5:7,2]<- colMeans(uncerit, na.rm = T)
 
-round(output2, 4)
 
 
 
